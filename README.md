@@ -21,8 +21,20 @@ Ensure that you have Cordova and Ionic installed as global packages
 
 This will install the Ionic and Cordova command line tools to compile the APK
 
-#### Install the Packages
+#### Install the packages
 
 Run this command to install the application packages
 
     $ npm install
+
+#### Running locally in a browser
+
+This command will open the app in a web browser
+
+    $ ionic serve
+
+#### Running on device
+
+This will transfer a copy of the apk to the tablet and run natively.
+
+    $ ionic cordova run android
