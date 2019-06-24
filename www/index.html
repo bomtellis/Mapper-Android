@@ -1,0 +1,109 @@
+<!DOCTYPE html>
+<html lang="en" dir="ltr" ng-app="Mapper">
+
+<head>
+    <meta charset="utf-8">
+    <title>Mapper</title>
+    <meta name="viewport" content="initial-scale=1, maximum-scale=1, user-scalable=no, width=device-width">
+    <link rel="stylesheet" href="./vendor/bootstrap/dist/css/bootstrap.min.css" >
+    <link rel="stylesheet" href="./vendor/leaflet/dist/leaflet.css">
+    <link rel="stylesheet" href="./vendor/fa/css/all.css">
+    <link rel="stylesheet" href="./lib/angularjs-slider/dist/rzslider.min.css">
+    <link rel="stylesheet" href="./css/master.css">
+    <base href="/" target="_blank">
+</head>
+
+<body ng-controller="MapperController as Map">
+    <div class="splash" ng-if="Map.error">
+        <div class="spinner"></div>
+    </div>
+
+
+
+    <ui-view></ui-view>
+
+    <nav class="navbar fixed-bottom navbar-expand-sm navbar-dark bg-dark">
+        <a class="navbar-brand" href="#">Mapper</a>
+        <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarCollapse" aria-controls="navbarCollapse" aria-expanded="false" aria-label="Toggle navigation">
+            <span class="navbar-toggler-icon"></span>
+        </button>
+        <div class="collapse navbar-collapse" id="navbarCollapse">
+            <ul class="navbar-nav mr-auto">
+                <li class="nav-item" ui-sref-active="active">
+                    <a class="nav-link" ui-sref="mapFinder">Search</a>
+                </li>
+                <li class="nav-item" ui-sref-active="active">
+                    <a class="nav-link" ui-sref="recentList">Recently Viewed</a>
+                </li>
+                <!-- <li class="nav-item" ui-sref-active="active">
+                    <a class="nav-link" ui-sref="addMap">Add a map</a>
+                </li>
+                <li class="nav-item" ui-sref-active="active">
+                    <a class="nav-link" ui-sref="manage">Manage</a>
+                </li> -->
+                <li class="nav-item" ui-sref-active="active">
+                    <a class="nav-link" ui-sref="setup">Setup</a>
+                </li>
+                <li class="nav-item" ui-sref-active="active">
+                    <a class="nav-link" ui-sref="genTest.home">Generator Testing</a>
+                </li>
+                <li class="nav-item" ui-sref-active="active">
+                    <a class="nav-link" ui-sref="boilers.home">Boiler Checks</a>
+                </li>
+            </ul>
+
+            <ul class="navbar-nav mt-2 mt-md-0">
+                <li class="nav-item" ui-sref-active="active">
+                    <a class="nav-link" ui-sref="emergencyResets">
+                        <i class="fas fa-exclamation-triangle"></i>
+                    </a>
+                </li>
+            </ul>
+        </div>
+
+
+    </nav>
+
+    <!-- Bootstrap jQuery -->
+    <script src="vendor/jquery/dist/jquery.min.js" charset="utf-8"></script>
+    <script src="vendor/bootstrap/dist/js/bootstrap.min.js" charset="utf-8"></script>
+
+    <!-- ionic/angularjs js -->
+    <!-- <script src="lib/ionic/js/ionic.bundle.js"></script> -->
+
+    <!-- cordova script (this will be a 404 during development) -->
+    <!-- <script src="cordova.js"></script> -->
+
+    <script src="./vendor/angular/angular.min.js" charset="utf-8"></script>
+    <script src="./lib/angular-sanitize/angular-sanitize.js" charset="utf-8"></script>
+    <script src="./vendor/leaflet/dist/leaflet.js" charset="utf-8"></script>
+    <script src="./vendor/angular-simple-logger/dist/angular-simple-logger.js" charset="utf-8"></script>
+    <script src="./vendor/angular-ui-router/release/angular-ui-router.min.js" charset="utf-8"></script>
+    <script src="./lib/angular-local-storage/dist/angular-local-storage.min.js" charset="utf-8"></script>
+    <script src="./lib/angular-websocket/dist/angular-websocket.min.js" charset="utf-8"></script>
+    <script src="./vendor/ui-bootstrap-tpls-2.5.0.min.js" charset="utf-8"></script>
+    <script src="./vendor/ui-leaflet/dist/ui-leaflet.min.js" charset="utf-8"></script>
+    <script src="./vendor/dir-paginate.js" charset="utf-8"></script>
+    <script src="./lib/showdown/dist/showdown.min.js" charset="utf-8"></script>
+    <script src="./lib/ng-showdown/dist/ng-showdown.min.js" charset="utf-8"></script>
+    <script src="./lib/angularjs-slider/dist/rzslider.min.js" charset="utf-8"></script>
+    <script src="./vendor/signature_pad.min.js" charset="utf-8"></script>
+
+    <!-- App  -->
+    <script src="./js/app.js" charset="utf-8"></script>
+
+    <!-- Services -->
+    <script src="./js/app.services.js" charset="utf-8"></script>
+
+    <!-- Controllers -->
+    <script src="./js/controllers/mapper.js" charset="utf-8"></script>
+    <script src="./js/controllers/genReset.js" charset="utf-8"></script>
+    <script src="./js/controllers/boiler.js" charset="utf-8"></script>
+
+    <!-- Routes  -->
+    <script src="./js/routes/mapper.js" charset="utf-8"></script>
+    <script src="./js/routes/genReset.js" charset="utf-8"></script>
+    <script src="./js/routes/boiler.js" charset="utf-8"></script>
+</body>
+
+</html>

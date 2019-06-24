@@ -1,0 +1,59 @@
+<div class="splash" ng-if="mc.loading">
+    <div class="spinner"></div>
+</div>
+
+<div class="container">
+    <br>
+
+    <h3 id="top">Manage maps</h3>
+    <br>
+
+    <form class="card card-sm">
+      <div class="card-body row no-gutters align-items-center">
+        <div class="col-auto">
+          <i class="fas fa-search h4 text-body search-icon"></i>
+        </div>
+        <!--end of col-->
+        <div class="col">
+          <input class="form-control form-control-lg form-control-borderless" name="mapFilter" ng-model="mapFilter" type="search" placeholder="Map name">
+        </div>
+        <!--end of col-->
+      </div>
+    </form>
+
+    <br>
+
+    <table class="table">
+      <thead>
+        <tr>
+          <th scope="col">Map Name</th>
+          <th scope="col">Description</th>
+          <th scope="col">Last Updated</th>
+          <th scope="col">Visible</th>
+          <th scope="col">{{currentPage}}</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr dir-paginate="item in mc.items | filter: mapFilter | itemsPerPage: 10" pagination-id="table">
+          <th scope="row">{{item.mapName}}</th>
+          <td>{{item.description}}</td>
+          <td>{{item.lastUpdated | date: 'dd/MM/yyyy hh:mm'}}</td>
+          <td>{{item.hidden ? 'No' : 'Yes'}}</td>
+          <td>
+              <!-- Buttons -->
+              <div class="btn-group-vertical">
+                  <button type="button" class="btn btn-success" ui-sref="viewMap({id: item._id})">View</button>
+                  <button type="button" class="btn btn-primary" ui-sref="editMap({id: item._id})">Edit</button>
+                  <button type="button" class="btn btn-warning" ng-click="mc.hide(item)">{{item.hidden ? 'Show': 'Hide'}}</button>
+                  <button type="button" class="btn btn-danger" ng-click="mc.remove(item)">Remove</button>
+              </div>
+          </td>
+        </tr>
+      </tbody>
+    </table>
+
+    <dir-pagination-controls template-url="./views/manage/pagination.tpl.html" pagination-id="table" on-page-change="mc.pageUpdate()"></dir-pagination-controls>
+    <br>
+</div>
+
+<br><br><br>

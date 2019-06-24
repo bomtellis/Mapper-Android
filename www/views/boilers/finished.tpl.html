@@ -1,0 +1,50 @@
+<div class="container">
+  <div class="row">
+    <div class="col-sm">
+      <h3>Finalise Checks</h3>
+      <hr>
+    </div>
+  </div>
+
+  <div class="row">
+    <div class="col-sm" ng-repeat="boiler in boilerTest">
+      <h3>Boiler {{$index + 1}} - <span><a class="btn btn-primary" style="color: #fff !important;" ng-click="bFC.edit(boiler.stateName)">Edit</a></span></h3>
+      <ul class="boilerList">
+        <li>LHS Sightglass: {{boiler.sightglass.lhs}}%</li>
+        <li>RHS Sightglass: {{boiler.sightglass.rhs}}%</li>
+        <li>Sightglass Test: {{boiler.sightglass.blowdown ? 'Yes' : 'No'}}</li>
+      </ul>
+      <ul class="boilerList">
+        <li>TDS: {{boiler.tds}} PPM (mg/L)</li>
+        <li>Oxygen: {{boiler.o2}}%</li>
+        <li>Flue Temprature: {{boiler.fluetemp}} &deg;C</li>
+      </ul>
+      <ul class="boilerList">
+        <li>1st Low Water: {{boiler.safety.first ? 'Pass': 'Fail'}}</li>
+        <li>2st Low Water: {{boiler.safety.second ? 'Pass': 'Fail'}}</li>
+      </ul>
+      <ul class="boilerList">
+        <li>Bottom Blowdown:
+          {{boiler.bottomBlowdown.status ? 'Performed' : 'Not performed'}}
+          <span ng-if="boiler.bottomBlowdown.status">
+            <ng-pluralize count="boiler.bottomBlowdown.quantity" when="{'1': 'once','2': 'twice','other': '{} times'}"></ng-pluralize> for
+            <ng-pluralize count="boiler.bottomBlowdown.duration" when="{'1': '{} second','other': '{} seconds'}"></ng-pluralize> each time
+          </span>
+        </li>
+      </ul>
+    </div>
+  </div>
+
+  <div class="row">
+      <canvas id="canvas" width="650" height="375"></canvas>
+      <div class="signPadButtons">
+          <button type="button" name="button" class="btn btn-danger" ng-click="bFC.clear()">Clear</button>
+      </div>
+  </div>
+
+  <div class="row pt-5">
+    <div class="col-sm">
+      <button type="button" name="button" class="btn btn-success btn-block" ng-click="bFC.finish()">Finish</button>
+    </div>
+  </div>
+</div>

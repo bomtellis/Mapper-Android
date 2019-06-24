@@ -1,0 +1,32 @@
+<div class="container">
+  <br>
+  <h3>Recently Viewed</h3>
+  <ul class="nav">
+    <li class="nav-item">
+      <a class="nav-link active" href="#">Recently Viewed</a>
+    </li>
+    <li class="nav-item">
+      <a class="nav-link active" href="#">Favourites</a>
+    </li>
+    <li class="nav-item">
+      <button type="button" class="btn btn-danger" ng-click="rlc.clear()">Clear</button>
+    </li>
+
+  </ul>
+
+  <hr>
+
+  <ul style="list-style-type: none;">
+    <li ng-repeat="item in rlc.items">
+      <a ui-sref="viewMap({id: item._id})">
+        <span>{{item.mapName}}</span>
+      </a>
+      <p>
+        {{item.description}}
+      </p>
+    </li>
+    <p ng-if="!rlc.items.length">
+      No recently viewed maps
+    </p>
+  </ul>
+</div>

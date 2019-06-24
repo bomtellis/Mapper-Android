@@ -1,0 +1,225 @@
+<br><br>
+<form name="boilerForm">
+
+  <div class="container">
+    <div class="row mb-3">
+      <div class="col-sm">
+        <h2>Boiler {{bC.stateParams.boilerNumber}}</h2>
+      </div>
+    </div>
+
+    <hr>
+
+    <div class="row mb-3">
+      <div class="col">
+        <h3>Sightglass Levels</h3>
+      </div>
+    </div>
+
+
+    <div class="row mb-5">
+      <!-- LHS and RHS glasses -->
+      <div class="col-sm">
+        <!-- outside of the sightglass -->
+        <div class="sightglass-outer">
+          <h3>LHS</h3>
+          <div class="sightglass-topcover"></div>
+          <div class="sightglass-steamcock">
+            <div class="cock-circle" />
+            <div class="cock-handle" />
+            <div class="rubber-handle" />
+          </div>
+          <div class="sightglass-glass">
+            <!-- bowl -->
+            <div class="sightglass-tube">
+              <div class="sightglass-waterlevel" ng-style="{'height': boilerTest[boilerNumber].sightglass.lhs + '%'}">
+                <svg version="1.1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" x="0px" y="0px" width="300px" height="600px" viewBox="0 0 300 600" enable-background="new 0 0 300 600" xml:space="preserve">
+                  <path id="waveShape" d="M300,300V2.5c0,0-0.6-0.1-1.1-0.1c0,0-25.5-2.3-40.5-2.4c-15,0-40.6,2.4-40.6,2.4
+	c-12.3,1.1-30.3,1.8-31.9,1.9c-2-0.1-19.7-0.8-32-1.9c0,0-25.8-2.3-40.8-2.4c-15,0-40.8,2.4-40.8,2.4c-12.3,1.1-30.4,1.8-32,1.9
+	c-2-0.1-20-0.8-32.2-1.9c0,0-3.1-0.3-8.1-0.7V600H300z" />
+                </svg>
+              </div>
+              <rzslider rz-slider-model="boilerTest[boilerNumber].sightglass.lhs" rz-slider-options="{floor: 0,ceil: 100,vertical: true}"></rzslider>
+            </div>
+          </div>
+          <div class="sightglass-watercock">
+            <div class="cock-circle" />
+            <div class="cock-handle" />
+            <div class="rubber-handle" />
+          </div>
+        </div>
+      </div>
+
+      <div class="col-sm">
+
+        <!-- outside of the sightglass -->
+        <div class="sightglass-outer">
+          <h3>RHS</h3>
+          <div class="sightglass-topcover"></div>
+          <div class="sightglass-steamcock">
+            <div class="cock-circle" />
+            <div class="cock-handle" />
+            <div class="rubber-handle" />
+          </div>
+          <div class="sightglass-glass">
+            <!-- bowl -->
+            <div class="sightglass-tube">
+              <div class="sightglass-waterlevel" ng-style="{'height': boilerTest[boilerNumber].sightglass.rhs + '%'}">
+                <svg version="1.1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" x="0px" y="0px" width="300px" height="600px" viewBox="0 0 300 600" enable-background="new 0 0 300 600" xml:space="preserve">
+                  <path id="waveShape2" d="M300,300V2.5c0,0-0.6-0.1-1.1-0.1c0,0-25.5-2.3-40.5-2.4c-15,0-40.6,2.4-40.6,2.4
+	c-12.3,1.1-30.3,1.8-31.9,1.9c-2-0.1-19.7-0.8-32-1.9c0,0-25.8-2.3-40.8-2.4c-15,0-40.8,2.4-40.8,2.4c-12.3,1.1-30.4,1.8-32,1.9
+	c-2-0.1-20-0.8-32.2-1.9c0,0-3.1-0.3-8.1-0.7V600H300z" />
+                </svg>
+              </div>
+              <rzslider rz-slider-model="boilerTest[boilerNumber].sightglass.rhs" rz-slider-options="{floor: 0,ceil: 100,vertical: true}"></rzslider>
+            </div>
+          </div>
+          <div class="sightglass-watercock">
+            <div class="cock-circle" />
+            <div class="cock-handle" />
+            <div class="rubber-handle" />
+          </div>
+        </div>
+
+
+      </div>
+      <!-- end LHS and RHS glasses -->
+
+      <div class="col-sm">
+        <div class="form-group">
+          <label>LHS Level: {{boilerTest[boilerNumber].sightglass.lhs}}%</label>
+          <small class="form-text text-muted">Normally should be around 50%</small>
+        </div>
+
+        <div class="form-group">
+          <label>RHS Level: {{boilerTest[boilerNumber].sightglass.rhs}}%</label>
+
+          <small class="form-text text-muted">Normally should be around 50%</small>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div class="container pt-5">
+    <!-- tds oxygen flue temps -->
+    <div class="row">
+      <div class="col-sm">
+        <!-- tds -->
+        <div class="form-group">
+          <label>TDS Meter Reading</label>
+          <input type="number" class="form-control" name="tds" ng-model="boilerTest[boilerNumber].tds" required>
+          <small class="form-text text-muted">What is the TDS of the boiler e.g 3000 PPM(mg/L)</small>
+        </div>
+      </div>
+      <div class="col-sm">
+        <!-- oxygen -->
+        <div class="form-group">
+          <label>Oxygen Concentration</label>
+          <input type="number" class="form-control" name="o2" ng-model="boilerTest[boilerNumber].o2" required>
+          <small class="form-text text-muted">Concentration of oxygen in the air. e.g 20.8%</small>
+        </div>
+      </div>
+      <div class="col-sm">
+        <!-- flue temp -->
+        <div class="form-group">
+          <label>Flue Temprature</label>
+          <input type="number" class="form-control" name="fluetemp" ng-model="boilerTest[boilerNumber].fluetemp" required>
+          <small class="form-text text-muted">Temprature of the flue exiting the boiler. e.g 200&deg;C </small>
+        </div>
+      </div>
+    </div>
+
+    <!-- low water level alarms -->
+    <div class="row">
+      <div class="col-sm">
+        <!-- 1st low -->
+        <div class="form-group">
+          <label>1st Low Water</label>
+          <select class="form-control" name="first" ng-model="boilerTest[boilerNumber].safety.first" required>
+            <option ng-value="true">Yes</option>
+            <option ng-value="false">No</option>
+          </select>
+          <small class="form-text text-muted">Has the boiler has locked out and reset successfully</small>
+        </div>
+      </div>
+
+      <div class="col-sm">
+          <!-- sightglass blowdown -->
+          <div class="form-group">
+            <label>Sightglasses blown down</label>
+            <select class="form-control" name="sightglassblowdown" ng-model="boilerTest[boilerNumber].sightglass.blowdown" required>
+              <option ng-value="true">Yes</option>
+              <option ng-value="false">No</option>
+            </select>
+
+            <small class="form-text text-muted">Are you satisfied with operation</small>
+          </div>
+      </div>
+
+
+      <div class="col-sm">
+        <!-- 2nd low -->
+        <div class="form-group">
+          <label>2nd Low Water</label>
+          <select class="form-control" name="second" ng-model="boilerTest[boilerNumber].safety.second" required>
+            <option ng-value="true">Yes</option>
+            <option ng-value="false">No</option>
+          </select>
+          <small class="form-text text-muted">Has the boiler has locked out and reset successfully</small>
+        </div>
+      </div>
+    </div>
+
+    <!-- bottom blowdown -->
+    <div class="row">
+      <div class="col-sm">
+        <!-- 1st low -->
+        <div class="form-group">
+          <label>Bottom Blowdown</label>
+          <select class="form-control" name="bottomBlowdownStatus" ng-model="boilerTest[boilerNumber].bottomBlowdown.status" required>
+            <option ng-value="true">Yes</option>
+            <option ng-value="false">No</option>
+          </select>
+          <small class="form-text text-muted">Have you performed a bottom blowdown</small>
+        </div>
+      </div>
+      <div class="col-sm">
+        <!-- 2nd low -->
+        <div class="form-group">
+          <label>Duration</label>
+          <input type="number" class="form-control" name="blowdownDuration" ng-model="boilerTest[boilerNumber].bottomBlowdown.duration" ng-required="boilerTest[boilerNumber].bottomBlowdown.status">
+          <small class="form-text text-muted">How long the valve was open for</small>
+        </div>
+      </div>
+
+      <div class="col-sm">
+        <!-- 2nd low -->
+        <div class="form-group">
+          <label>Quantity</label>
+          <input type="number" class="form-control" name="blowdownQuantity" ng-model="boilerTest[boilerNumber].bottomBlowdown.quantity" ng-required="boilerTest[boilerNumber].bottomBlowdown.status">
+          <small class="form-text text-muted">How many times you opened the valve</small>
+        </div>
+      </div>
+    </div>
+
+    <!-- form buttons -->
+    <div class="row">
+      <div class="col-sm">
+        <!-- move to next boiler -->
+        <a class="btn btn-primary btn-block" ui-state="bC.next" role="button">Next Boiler</a>
+      </div>
+      <div class="col-sm">
+        <!-- complete test -->
+        <button type="button" name="button" ng-if="(boilerForm.$valid) && !((boilerTest[boilerNumber].tds > 3500) || (boilerTest[boilerNumber].safety.first == false) || (boilerTest[boilerNumber].safety.second == false) || (boilerTest[boilerNumber].sightglass.blowdown == false))" ng-class="{'btn-outline-success': boilerForm.$invalid, 'btn-success': boilerForm.$valid}" class="btn btn-block" ng-disabled="boilerForm.$invalid" ng-click="bC.complete()">
+          Mark as Complete
+        </button>
+        <button type="button" name="button" ng-if="(boilerTest[boilerNumber].tds > 3500) || (boilerTest[boilerNumber].safety.first == false) || (boilerTest[boilerNumber].safety.second == false) || (boilerTest[boilerNumber].sightglass.blowdown == false)" class="btn btn-danger btn-block" ng-click="bC.failed()">
+          Mark as Failed
+        </button>
+      </div>
+    </div>
+
+  </div>
+</form>
+
+<br><br><br>

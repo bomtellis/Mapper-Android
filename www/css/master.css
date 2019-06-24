@@ -1,0 +1,263 @@
+body {
+    padding: 0;
+    margin: 0;
+}
+
+html,body {
+    width:100%;
+    height:100%;
+}
+
+.leaflet-container {
+    background: #fff;
+}
+
+.modal {
+display: block;
+}
+
+.search-icon {
+    margin-top: 10px;
+    padding-right: 10px;
+}
+
+.splash {
+    position: absolute;
+    width: 100%;
+    height: 100%;
+    z-index: 999;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    background: #333;
+    opacity: 0.9
+}
+
+.spinner {
+  width: 40px;
+  height: 40px;
+  background-color: #fff;
+
+  margin: 100px auto;
+  -webkit-animation: sk-rotateplane 1.2s infinite ease-in-out;
+  animation: sk-rotateplane 1.2s infinite ease-in-out;
+}
+
+@-webkit-keyframes sk-rotateplane {
+  0% { -webkit-transform: perspective(120px) }
+  50% { -webkit-transform: perspective(120px) rotateY(180deg) }
+  100% { -webkit-transform: perspective(120px) rotateY(180deg)  rotateX(180deg) }
+}
+
+@keyframes sk-rotateplane {
+  0% {
+    transform: perspective(120px) rotateX(0deg) rotateY(0deg);
+    -webkit-transform: perspective(120px) rotateX(0deg) rotateY(0deg)
+  } 50% {
+    transform: perspective(120px) rotateX(-180.1deg) rotateY(0deg);
+    -webkit-transform: perspective(120px) rotateX(-180.1deg) rotateY(0deg)
+  } 100% {
+    transform: perspective(120px) rotateX(-180deg) rotateY(-179.9deg);
+    -webkit-transform: perspective(120px) rotateX(-180deg) rotateY(-179.9deg);
+  }
+}
+
+.sightglass-outer
+{
+    position: relative;
+    top: 0%;
+    left: 25%;
+    width: 125px;
+    height: 380px;
+    border: 6px solid #817e72;
+    border-radius: 15px;
+    background: #dadada3d;
+    z-index: 6;
+}
+
+.sightglass-outer h3
+{
+    position: absolute;
+    top: 100%;
+    left: 27%;
+    margin-top: 10px;
+}
+
+.sightglass-steamcock
+{
+    position: absolute;
+    top: 10%;
+    left: -48%;
+    background: #b4b1a4ed;
+    width: 50px;
+    height: 25px;
+    z-index: 0;
+    border: 1px solid #878787;
+}
+
+.cock-circle
+{
+    position: relative;
+    top: -50%;
+    left: -50%;
+    background: #d0cfc9;
+    width: 50px;
+    height: 50px;
+    border-radius: 25px;
+    border: 1px solid #878787;
+}
+
+.cock-handle
+{
+    position: relative;
+    top: -100%;
+    left: -25%;
+    background: #9b988b;
+    width: 25px;
+    height: 100px;
+    border-bottom-right-radius: 5px;
+    border-bottom-left-radius: 5px;
+    z-index: -1;
+    border: 1px solid #878787;
+}
+
+.sightglass-watercock
+{
+    position: absolute;
+    top: 85%;
+    left: -48%;
+    background: #95938eed;
+    width: 50px;
+    height: 25px;
+    border: 1px solid #878787;
+}
+
+.rubber-handle
+{
+    position: absolute;
+    top: 300%;
+    left: -25%;
+    background: #e74141;
+    width: 25px;
+    height: 75px;
+    border-bottom-left-radius: 10px;
+    border-bottom-right-radius: 10px;
+    border: 2px solid #df1b1c;
+}
+
+.sightglass-glass
+{
+    background: #ffe8a4;
+    width: 100%;
+    height: 100%;
+    border-radius: 10px;
+    z-index: 3;
+}
+
+.sightglass-glass::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+}
+
+.sightglass-glass::before {
+    box-shadow: inset 0 0 2000px rgba(255,255,255,.75);
+    filter: blur(10px);
+}
+
+.sightglass-tube
+{
+    position: relative;
+    background: #ffffffbd;
+    left: 31.5px;
+    width: 50px;
+    height: 100%;
+    border-left: 4px solid #aaa;
+    border-right: 4px solid #aaa;
+    overflow: hidden;
+    backface-visibility: hidden;
+    transform: translate3d(0,0,0);
+    z-index: 2;
+}
+
+.sightglass-waterlevel
+{
+    position: absolute;
+    bottom: 0px;
+    width: 100%;
+    z-index: 1;
+}
+
+.sightglass-waterlevel #waveShape
+{
+    animation-name: waveAction;
+    animation-iteration-count: infinite;
+    animation-timing-function: linear;
+    animation-duration: 0.5s;
+    fill: #77deff;
+}
+
+.sightglass-waterlevel #waveShape2
+{
+    animation-name: waveAction;
+    animation-iteration-count: infinite;
+    animation-timing-function: linear;
+    animation-duration: 0.55s;
+    fill: #77deff;
+}
+
+.sightglass-tube .rz-active
+{
+    display: none;
+}
+
+.sightglass-tube .rz-pointer
+{
+    display: none;
+}
+
+.sightglass-tube .rz-bar
+{
+    background: transparent;
+}
+
+@keyframes waveAction {
+    0% {
+        transform: translate(-150px, 0);
+    }
+    100% {
+        transform: translate(0, 0);
+    }
+}
+
+@keyframes waveAction2 {
+    0% {
+        transform: translate(-150px, 0);
+    }
+    100% {
+        transform: translate(0, 0);
+    }
+}
+
+#canvas {
+    margin: auto;
+    border: 3px solid #444;
+    border-radius: 5px;
+}
+
+.signPadButtons
+{
+    position: relative;
+    padding-top: 10px;
+    margin: auto;
+    width: 650px;
+}
+
+
+.boilerList
+{
+    list-style-type: none;
+}

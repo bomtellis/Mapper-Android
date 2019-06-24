@@ -1,0 +1,35 @@
+<div class="splash" ng-if="bmc.loading">
+  <div class="spinner"></div>
+</div>
+
+<div class="container" ng-if="!bmc.hideMenu">
+    <br>
+    <h3 id="top">Boiler Testing</h3>
+
+    <!-- buttons -->
+    <ul class="nav nav-pills" ng-if="state.current.name == 'boilers.home'">
+      <li class="nav-item">
+        <a class="nav-link" ui-sref="boilers.home" ui-sref-active="active">Home</a>
+      </li>
+      <li class="nav-item">
+        <a class="nav-link" ui-sref="boilers.graphs" ui-sref-active="active">Boiler Stats</a>
+      </li>
+      <li class="nav-item" ng-if="!boilerTestStarted">
+        <a class="nav-link" ui-sref="boilers.create" ui-sref-active="active">Start Checks</a>
+      </li>
+      <li class="nav-item" ng-if="boilerTestStarted">
+        <a class="nav-link" ui-sref="boilers.1" ng-click="bmc.hideMenu = true" ui-sref-active="active">Continue Checks</a>
+      </li>
+    </ul>
+    <ul class="nav nav-pills" ng-if="state.current.name !== 'boilers.home'">
+      <li class="nav-item">
+        <a class="nav-link" ui-sref="boilers.home">Back</a>
+      </li>
+    </ul>
+</div>
+
+<br>
+
+<ui-view></ui-view>
+
+<br><br><br>

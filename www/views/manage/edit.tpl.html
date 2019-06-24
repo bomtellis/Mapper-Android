@@ -1,0 +1,34 @@
+<div class="splash" ng-if="emc.loading">
+    <div class="spinner"></div>
+</div>
+
+<div class="container">
+    <br>
+
+    <h3>Edit {{emc.map.mapName}}</h3>
+    <br>
+
+    <form no-submit>
+     <div class="form-group">
+       <label>Map Name</label>
+       <input type="text" class="form-control" id="mapName" ng-model="emc.map.mapName">
+       <small class="form-text text-muted">Title of the map.</small>
+     </div>
+     <div class="form-group">
+       <label for="exampleInputEmail1">Map Description</label>
+       <textarea name="description" class="form-control" rows="8" cols="80" ng-model="emc.map.description"></textarea>
+       <small class="form-text text-muted">A helpful message to identify the map.</small>
+     </div>
+     <div class="form-group">
+       <label for="exampleInputPassword1">File (PDF only)</label><br>
+       <input type="file" id="uploadedFile" accept="application/pdf" file-model="uploadedFile">
+       <small class="form-text text-muted">This must be a PDF. No more than 10Mb.</small>
+     </div>
+
+     <button type="submit" class="btn btn-primary" ng-click="emc.go(emc.map, uploadedFile)">Submit</button>
+     <button type="submit" class="btn btn-danger" ui-sref="manage">Cancel</button>
+    </form>
+</div>
+
+
+<br><br><br>

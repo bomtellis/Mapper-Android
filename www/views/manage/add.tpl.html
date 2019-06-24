@@ -1,0 +1,29 @@
+<div class="splash" ng-if="amc.loading">
+    <div class="spinner"></div>
+</div>
+
+<div class="container">
+    <br>
+    <form no-submit name="addForm">
+        <h3>{{formModel.mapName.length ? formModel.mapName : 'Add a new map'}}</h3>
+     <div class="form-group">
+       <label>Map Name</label>
+       <input type="text" class="form-control" id="mapName" ng-model="formModel.mapName" required>
+       <small class="form-text text-muted">Title of the map.</small>
+     </div>
+     <div class="form-group">
+       <label for="exampleInputEmail1">Map Description</label>
+       <textarea name="description" class="form-control" rows="8" cols="80" ng-model="formModel.description" required></textarea>
+       <small class="form-text text-muted">A helpful message to identify the map.</small>
+     </div>
+     <div class="form-group">
+       <label for="exampleInputPassword1">File (PDF only)</label><br>
+       <input type="file" id="uploadedFile" accept="application/pdf" file-model="uploadedFile">
+       <small class="form-text text-muted">This must be a PDF. No more than 10Mb.</small>
+     </div>
+
+     <button type="submit" class="btn btn-primary" ng-click="amc.go(formModel, uploadedFile)" ng-disabled="(addForm.$invalid || (uploadedFile == null ? true: false))">Submit</button>
+    </form>
+</div>
+
+<br><br><br>

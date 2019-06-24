@@ -1,0 +1,38 @@
+<div class="splash" ng-if="sc.loading">
+    <div class="spinner"></div>
+</div>
+
+<div class="container">
+  <br>
+  <form no-submit>
+    <h3>Setup</h3>
+
+    <div class="alert alert-danger" role="alert" ng-if="sc.error">
+      Unable to connect to server. Please check connection details then retry.
+    </div>
+
+    <div class="form-group">
+      <label>Protocol</label>
+      <select class="form-control" name="protocol" ng-model="sc.formModel.protocol" ng-value="sc.formModel.protocol">
+        <option value="http://">HTTP</option>
+        <option value="https://">HTTPS</option>
+      </select>
+
+      <small class="form-text text-muted">HTTP / HTTPS</small>
+    </div>
+    <div class="form-group">
+      <label>API Domain / IP</label>
+      <input type="text" class="form-control" id="mapName" ng-model="sc.formModel.domain" ng-value="sc.formModel.domain">
+      <small class="form-text text-muted">Domain / IP of api</small>
+    </div>
+    <div class="form-group">
+      <label>API Port</label>
+      <input type="text" class="form-control" id="mapName" ng-model="sc.formModel.port" ng-value="sc.formModel.port">
+      <small class="form-text text-muted">Port to connect to eg 8080.</small>
+    </div>
+
+    <button type="submit" class="btn btn-primary" ng-click="sc.go(sc.formModel)">Submit</button>
+  </form>
+</div>
+
+<br><br><br>

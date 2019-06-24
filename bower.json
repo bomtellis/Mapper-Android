@@ -1,0 +1,14 @@
+{
+  "name": "HelloIonic",
+  "private": "true",
+  "devDependencies": {
+    "ionic": "ionic-team/ionic-bower#1.3.4"
+  },
+  "dependencies": {
+    "angular-local-storage": "^0.7.1",
+    "angular-websocket": "^2.0.0",
+    "ng-showdown": "^1.1.0",
+    "angular-sanitize": "^1.7.8",
+    "angularjs-slider": "^7.0.0"
+  }
+}

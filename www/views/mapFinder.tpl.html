@@ -1,0 +1,29 @@
+<div class="container">
+  <br />
+  <div class="row justify-content-center">
+    <div class="col-12 col-md-10 col-lg-8">
+      <form class="card card-sm">
+        <div class="card-body row no-gutters align-items-center">
+            <div class="col-auto">
+              <i class="fas fa-search h4 text-body search-icon"></i>
+            </div>
+          <!--end of col-->
+          <div class="col">
+            <input
+                class="form-control form-control-lg form-control-borderless"
+                type="search"
+                placeholder="Search for a map"
+                name="mapName"
+                ng-model="map.mapName"
+                typeahead-on-select="mfc.selectTypeAhead($item)"
+                uib-typeahead="map.mapName for map in mfc.mapData | filter: {mapName: $viewValue}"
+                autocomplete="off"
+            >
+          </div>
+          <!--end of col-->
+        </div>
+      </form>
+    </div>
+    <!--end of col-->
+  </div>
+</div>
