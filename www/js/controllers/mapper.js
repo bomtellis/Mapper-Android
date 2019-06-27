@@ -56,7 +56,7 @@ app.controller('viewMapController', ['mapService', '$stateParams', 'leafletData'
     angular.extend($scope, {
         defaults: {
             crs: 'Simple',
-            maxZoom: 3,
+            maxZoom: 5,
             minZoom: 0
         },
         center: {
@@ -176,7 +176,7 @@ app.controller('addMapController', ['$http', '$state', '$rootScope', '$websocket
                     socket.close();
                     $state.go('manage');
                 }
-            }, 40000);
+            }, 80000);
         }, function errorCallback()
         {
 
@@ -300,6 +300,7 @@ app.controller('favouritesController', ['$rootScope', 'mapService', '$uibModal',
         modalInstance.result.then(function (data) {
             if(data.status === true)
             {
+                map.mapName = data.name;
                 mapService.syncFavourites();
             }
         }, function () {

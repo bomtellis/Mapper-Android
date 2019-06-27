@@ -5,10 +5,10 @@
     <div class="modal-body" id="modal-body">
         <p>This will only be visible to you</p>
 
-        <input type="text" class="form-control" ng-model="rmc.map.mapName">
+        <input type="text" class="form-control" ng-model="mapName" placeholder="A new awesome name...">
     </div>
     <div class="modal-footer">
-      <button class="btn btn-primary" type="button" ng-click="rmc.ok()">Rename</button>
+      <button class="btn btn-primary" type="button" ng-click="rmc.ok(mapName)">Rename</button>
       <button class="btn btn-danger" type="button" ng-click="rmc.cancel()">Cancel</button>
     </div>
 </div>
