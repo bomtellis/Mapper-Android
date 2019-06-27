@@ -256,8 +256,34 @@ display: block;
     width: 650px;
 }
 
-
 .boilerList
 {
     list-style-type: none;
+}
+
+.favourite-box {
+    position: absolute;
+    width: 48px;
+    height: 48px;
+    border: 2px solid rgba(0,0,0,0.2);
+    background: rgba(255,255,255,0.95);
+    top: 80px;
+    right: 0;
+    margin-right: 10px;
+    border-radius: 5px;
+    z-index: 1001;
+}
+
+.favourite-box i {
+    position: relative;
+    top: 20%;
+    left: 30%;
+    color: transparent;
+    -webkit-text-stroke-width: 2px;
+    -webkit-text-stroke-color: #333;
+    transition: color 0.5s;
+}
+
+.favourite-box .favourited {
+    color: gold !important;
 }

@@ -27,6 +27,7 @@ app.controller('viewMapController', ['mapService', '$stateParams', 'leafletData'
 {
     var that = this;
     $scope.loading = true;
+    $scope.favourite = false;
 
     $scope.$watch("loaded", function(value)
     {
@@ -72,6 +73,16 @@ app.controller('viewMapController', ['mapService', '$stateParams', 'leafletData'
     mapService.getMap(this.id).then(function successCallback(data)
     {
         that.mapData = data.data;
+        mapService.checkFavourite(data.data).then(function()
+        {
+            console.log('it is');
+            $scope.favourite = true;
+        },
+        function()
+        {
+            console.log('it isnt');
+            $scope.favourite = false;
+        });
 
         angular.extend($scope, {
             layers: {
@@ -98,6 +109,24 @@ app.controller('viewMapController', ['mapService', '$stateParams', 'leafletData'
             $scope.loading = false;
         }, 400);
     });
+
+    // toggle Favourite
+    $scope.toggleFavourite = function()
+    {
+        console.log('Toggle');
+        mapService.checkFavourite(that.mapData).then(function(map)
+        {
+            // is a favourite
+            mapService.removeFavourite(map);
+        },
+        function(map)
+        {
+            // is not a favourite
+            mapService.addFavourite(map);
+        });
+
+        $scope.favourite = !$scope.favourite;
+    }
 
 }]);
 
@@ -214,6 +243,11 @@ app.controller('setupController', ['configService', '$rootScope', '$state', '$ti
     }
 }]);
 
+app.controller('preferencesController', ['$uibModal', 'mapService', '$state', function($uibModal, mapService, $state)
+{
+
+}]);
+
 app.controller('recentListController', ['$rootScope', '$uibModal', 'mapService', '$state', function($rootScope, $uibModal, mapService, $state)
 {
     var that = this;
@@ -237,7 +271,41 @@ app.controller('recentListController', ['$rootScope', '$uibModal', 'mapService',
             console.log('no delete');
         });
       };
+}]);
 
+app.controller('favouritesController', ['$rootScope', 'mapService', '$uibModal', function($rootScope, mapService, $uibModal)
+{
+    var that = this;
+    that.items = $rootScope.favourites;
+
+    that.remove = function(map)
+    {
+        mapService.removeFavourite(map);
+    }
+
+    that.rename = function(map)
+    {
+        var modalInstance = $uibModal.open({
+          animation: true,
+          templateUrl: "./views/modals/rename.tpl.html",
+          controller: "renameModalController",
+          controllerAs: 'rmc',
+          backdrop: "static",
+          size: "md",
+          resolve: {
+              map: map
+          }
+        });
+
+        modalInstance.result.then(function (data) {
+            if(data.status === true)
+            {
+                mapService.syncFavourites();
+            }
+        }, function () {
+            console.log('no delete');
+        });
+    }
 
 }]);
 
@@ -447,5 +515,22 @@ app.controller('confirmModalController', ['$uibModalInstance', function($uibModa
     this.cancel = function()
     {
         $uibModalInstance.dismiss(false);
+    }
+}]);
+
+app.controller('renameModalController', ['$uibModalInstance', 'map', function($uibModalInstance, map)
+{
+    var that = this;
+
+    this.map = map;
+
+    this.ok = function(name)
+    {
+        $uibModalInstance.close({name: name, status: true});
+    }
+
+    this.cancel = function()
+    {
+        $uibModalInstance.dismiss({status: false});
     }
 }]);

@@ -46,6 +46,19 @@ app.service('mapService', ['$http', '$rootScope', 'localStorageService', functio
         }
     }
 
+    this.favouriteStatus = function()
+    {
+        let configured = localStorageService.get("favouritesConfigured");
+        if(configured !== true)
+        {
+            return false;
+        }
+        else
+        {
+            return true;
+        }
+    }
+
     this.getRecents = function()
     {
         return JSON.parse(localStorageService.get("recents"));
@@ -69,7 +82,7 @@ app.service('mapService', ['$http', '$rootScope', 'localStorageService', functio
         localStorageService.set("recentConfigured", true);
         for(let i = 0; i< $rootScope.recentList.length; i++)
         {
-            if(map._id == $rootScope.recentList[i]._id)
+            if(map._id === $rootScope.recentList[i]._id)
             {
                 // conflict
                 addBoolean = false;
@@ -87,6 +100,69 @@ app.service('mapService', ['$http', '$rootScope', 'localStorageService', functio
             $rootScope.recentList.unshift(map);
             localStorageService.set("recents", JSON.stringify($rootScope.recentList));
         }
+    }
+
+    this.getFavourites = function()
+    {
+        return JSON.parse(localStorageService.get("favourites"));
+    }
+
+    this.addFavourite = function(map)
+    {
+        var addBoolean = true;
+        // check if map is already in favourites
+        localStorageService.set("favouritesConfigured", true);
+        console.log($rootScope.favourites);
+        for(let i = 0; i < $rootScope.favourites.length; i++)
+        {
+            if(map._id === $rootScope.favourites[i]._id)
+            {
+                // conflicted do not add
+                addBoolean = false;
+            }
+        }
+
+        if(addBoolean === true)
+        {
+            $rootScope.favourites.push(map);
+        }
+
+        localStorageService.set("favourites", JSON.stringify($rootScope.favourites));
+    }
+
+    this.removeFavourite = function(map)
+    {
+        for(let i = 0; i < $rootScope.favourites.length; i++)
+        {
+            if(map._id === $rootScope.favourites[i]._id)
+            {
+                // splice this one
+                $rootScope.favourites.splice(i, 1);
+            }
+        }
+
+        //update the localstorage
+        localStorageService.set("favourites", JSON.stringify($rootScope.favourites));
+    }
+
+    this.checkFavourite = function(map)
+    {
+        return new Promise(function(resolve, reject) {
+            for(let i = 0; i < $rootScope.favourites.length; i++)
+            {
+                if(map._id === $rootScope.favourites[i]._id)
+                {
+                    resolve(map); // map in favourites
+                }
+            }
+
+            reject(map); // no map in favourites
+        });
+    };
+
+    this.syncFavourites = function()
+    {
+        localStorageService.set("favourites", JSON.stringify($rootScope.favourites));
     }
 
     this.deleteMap = function(map)

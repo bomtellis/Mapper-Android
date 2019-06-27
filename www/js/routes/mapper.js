@@ -38,12 +38,28 @@ app.config(function($urlRouterProvider, $locationProvider, $stateProvider, local
         controller: "addMapController",
         controllerAs: "amc"
     })
+
     .state({
-        name: "recentList",
-        url: "/recent",
-        templateUrl: "./views/recent.tpl.html",
+        name: "preferences",
+        url: "/preferences",
+        templateUrl: "./views/preferences/abstract.tpl.html",
+        controller: "preferencesController",
+        controllerAs: "pc",
+        abstract: true
+    })
+    .state({
+        name: "preferences.history",
+        url: "/history",
+        templateUrl: "./views/preferences/history.tpl.html",
         controller: "recentListController",
         controllerAs: "rlc"
+    })
+    .state({
+        name: "preferences.favourites",
+        url: "/favourites",
+        templateUrl: "./views/preferences/favourites.tpl.html",
+        controller: "favouritesController",
+        controllerAs: "fc"
     })
     .state({
         name: "editMap",

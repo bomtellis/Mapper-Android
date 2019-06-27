@@ -1,0 +1,22 @@
+<div class="container">
+    <div class="row pb-1">
+        <div class="col">
+            <ul style="list-style-type: none;">
+              <li ng-repeat="item in rlc.items">
+                <a ui-sref="viewMap({id: item._id})">
+                  <span>{{item.mapName}}</span>
+                </a>
+                <p>
+                  {{item.description}}
+                </p>
+              </li>
+              <p ng-if="!rlc.items.length">
+                No recently viewed maps
+              </p>
+            </ul>
+        </div>
+        <div class="col">
+            <button type="button" name="button" class="btn btn-danger" style="float: right;" ng-click="rlc.clear()">Clear history</button>
+        </div>
+    </div>
+</div>

@@ -18,6 +18,7 @@ app.run(function(localStorageService, $state, $timeout, $rootScope, configServic
     {
         let item = configService.status();
         let recentStatus = mapService.status();
+        let favouriteStatus = mapService.favouriteStatus();
 
         if(item !== true)
         {
@@ -59,6 +60,19 @@ app.run(function(localStorageService, $state, $timeout, $rootScope, configServic
         {
             // init empty array
             $rootScope.recentList = [];
+        }
+
+        // favourites
+        if(favouriteStatus == true)
+        {
+            let favouriteList = mapService.getFavourites();
+            $rootScope.favourites = favouriteList;
+            console.log($rootScope.favourites);
+        }
+        else
+        {
+            $rootScope.favourites = [];
+            console.log($rootScope.favourites);
         }
 
     }
