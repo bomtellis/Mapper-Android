@@ -56,7 +56,7 @@ app.controller('viewMapController', ['mapService', '$stateParams', 'leafletData'
     angular.extend($scope, {
         defaults: {
             crs: 'Simple',
-            maxZoom: 5,
+            maxZoom: 4,
             minZoom: 0
         },
         center: {
