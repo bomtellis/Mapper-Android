@@ -305,3 +305,9 @@ app.service('boilerService', ['$http', '$rootScope', function($http, $rootScope)
         return $http.post($rootScope.config.apiUrl + "api/boilers/", boilerTest);
     }
 }]);
+
+// authService
+app.service('authService', ['$http', function($http)
+{
+
+}]);

@@ -18,6 +18,13 @@ app.config(function($urlRouterProvider, $locationProvider, $stateProvider, local
         controllerAs: "sc"
     })
     .state({
+        name: "login",
+        url: "/login",
+        templateUrl: "./views/setup/login.tpl.html",
+        controller: "loginController",
+        controllerAs: "lc"
+    })
+    .state({
         name: "manage",
         url: "/manage",
         templateUrl: "./views/manage/home.tpl.html",
