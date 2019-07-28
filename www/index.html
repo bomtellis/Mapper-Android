@@ -9,6 +9,7 @@
     <link rel="stylesheet" href="./vendor/leaflet/dist/leaflet.css">
     <link rel="stylesheet" href="./vendor/fa/css/all.css">
     <link rel="stylesheet" href="./lib/angularjs-slider/dist/rzslider.min.css">
+    <link rel="stylesheet" href="./vendor/ngToast/ngToast.min.css">
     <link rel="stylesheet" href="./css/master.css">
     <base href="/" target="_blank">
 </head>
@@ -30,26 +31,29 @@
         <div class="collapse navbar-collapse" id="navbarCollapse">
             <ul class="navbar-nav mr-auto">
                 <li class="nav-item" ui-sref-active="active">
-                    <a class="nav-link" ui-sref="mapFinder">Search</a>
+                    <a class="nav-link" data-toggle="collapse" data-target="#navbarCollapse" ui-sref="mapFinder">Search</a>
                 </li>
                 <li class="nav-item" ui-sref-active="active">
-                    <a class="nav-link" ui-sref="preferences.history">History</a>
+                    <a class="nav-link" data-toggle="collapse" data-target="#navbarCollapse" ui-sref="preferences.history">History</a>
                 </li>
                 <li class="nav-item" ui-sref-active="active">
-                    <a class="nav-link" ui-sref="addMap">Add a map</a>
+                    <a class="nav-link" data-toggle="collapse" data-target="#navbarCollapse" ui-sref="addMap" ng-show="Map.permissionLevel > 1">Add a map</a>
                 </li>
                 <li class="nav-item" ui-sref-active="active">
-                    <a class="nav-link" ui-sref="manage">Manage</a>
+                    <a class="nav-link" data-toggle="collapse" data-target="#navbarCollapse" ui-sref="manage" ng-show="Map.permissionLevel > 1">Manage</a>
                 </li>
                 <li class="nav-item" ui-sref-active="active">
-                    <a class="nav-link" ui-sref="setup">Setup</a>
-                </li>
-                <!-- <li class="nav-item" ui-sref-active="active">
-                    <a class="nav-link" ui-sref="genTest.home">Generator Testing</a>
+                    <a class="nav-link" data-toggle="collapse" data-target="#navbarCollapse" ui-sref="setup">Setup</a>
                 </li>
                 <li class="nav-item" ui-sref-active="active">
-                    <a class="nav-link" ui-sref="boilers.home">Boiler Checks</a>
-                </li> -->
+                    <a class="nav-link" data-toggle="collapse" data-target="#navbarCollapse" ui-sref="login">Login</a>
+                </li>
+                <li class="nav-item" ui-sref-active="active" ng-show="Map.experimental">
+                    <a class="nav-link" data-toggle="collapse" data-target="#navbarCollapse" ui-sref="genTest.home">Generator Testing</a>
+                </li>
+                <li class="nav-item" ui-sref-active="active" ng-show="Map.experimental">
+                    <a class="nav-link" data-toggle="collapse" data-target="#navbarCollapse" ui-sref="boilers.home">Boiler Checks</a>
+                </li>
             </ul>
 
             <!-- <ul class="navbar-nav mt-2 mt-md-0">
@@ -75,7 +79,9 @@
     <!-- <script src="cordova.js"></script> -->
 
     <script src="./vendor/angular/angular.min.js" charset="utf-8"></script>
+    <script src="./lib/angular-animate/angular-animate.min.js" charset="utf-8"></script>
     <script src="./lib/angular-sanitize/angular-sanitize.js" charset="utf-8"></script>
+    <script src="./vendor/ngToast/ngToast.js" charset="utf-8"></script>
     <script src="./vendor/leaflet/dist/leaflet.js" charset="utf-8"></script>
     <script src="./vendor/angular-simple-logger/dist/angular-simple-logger.js" charset="utf-8"></script>
     <script src="./vendor/angular-ui-router/release/angular-ui-router.min.js" charset="utf-8"></script>
@@ -88,6 +94,7 @@
     <script src="./lib/ng-showdown/dist/ng-showdown.min.js" charset="utf-8"></script>
     <script src="./lib/angularjs-slider/dist/rzslider.min.js" charset="utf-8"></script>
     <script src="./vendor/signature_pad.min.js" charset="utf-8"></script>
+
 
     <!-- App  -->
     <script src="./js/app.js" charset="utf-8"></script>

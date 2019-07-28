@@ -1,4 +1,6 @@
-app.config(function($urlRouterProvider, $locationProvider, $stateProvider, localStorageServiceProvider, paginationTemplateProvider) {
+app.config(function($urlRouterProvider, $locationProvider, $stateProvider, localStorageServiceProvider, paginationTemplateProvider, $httpProvider) {
+    $httpProvider.defaults.withCredentials = true;
+    $httpProvider.defaults.useXDomain = true;
     localStorageServiceProvider.setPrefix('Mapper');
     // paginationTemplateProvider.setPath('views/manage/pagination.tpl.html');
     // $locationProvider.html5Mode(true);
@@ -22,7 +24,7 @@ app.config(function($urlRouterProvider, $locationProvider, $stateProvider, local
         url: "/login",
         templateUrl: "./views/setup/login.tpl.html",
         controller: "loginController",
-        controllerAs: "lc"
+        controllerAs: "lC"
     })
     .state({
         name: "manage",
@@ -78,3 +80,25 @@ app.config(function($urlRouterProvider, $locationProvider, $stateProvider, local
 
     $urlRouterProvider.otherwise('/'); //default route
 });
+
+app.factory('tokenAttachment', function($rootScope, $q, authService) {
+    var sessionInjector = {
+        request: function(config) {
+            var token = authService.getToken();
+            if (token) {
+                config.headers = config.headers || {};
+                config.headers['tabletToken'] = token;
+            }
+
+            return config;
+        }
+    };
+    return sessionInjector;
+});
+
+app.config([
+    '$httpProvider',
+    function($httpProvider) {
+        $httpProvider.interceptors.push('tokenAttachment');
+    }
+]);

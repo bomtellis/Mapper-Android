@@ -1,0 +1,16 @@
+<div class="modal-content">
+    <div class="modal-header">
+      <h3 class="modal-title" id="modal-title">Your session</h3>
+    </div>
+    <div class="modal-body" id="modal-body">
+        <p>Logged In: {{rmc.status}}</p>
+        <p ng-if="rmc.status">
+
+        </p>
+        <pre>{{rmc.data | prettyJSON }}</pre>
+        <pre>API TOKEN: {{rmc.token ? rmc.token : null | prettyJSON}}</pre>
+    </div>
+    <div class="modal-footer">
+      <button class="btn btn-light" type="button" ng-click="rmc.cancel()">Close</button>
+    </div>
+</div>

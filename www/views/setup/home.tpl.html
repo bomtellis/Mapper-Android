@@ -1,6 +1,9 @@
 <div class="splash" ng-if="sc.loading">
-    <div class="spinner"></div>
+  <div class="spinner"></div>
 </div>
+
+<!-- <div uib-alert class="alert alert-info" style="position: fixed; top: 20px; right: 20px; z-index: 2;">Logged out successfully</div> -->
+<toast></toast>
 
 <div class="container">
   <br>
@@ -31,8 +34,106 @@
       <small class="form-text text-muted">Port to connect to eg 8080.</small>
     </div>
 
-    <button type="submit" class="btn btn-primary" ng-click="sc.go(sc.formModel)">Submit</button>
+
+    <button type="button" class="btn" ng-init="advanced = true" ng-click="advanced = !advanced">
+      Advanced &nbsp;<i class="fas" ng-class="{'fa-chevron-down': advanced, 'fa-chevron-right': !advanced}"></i>
+    </button>
+
+    <div uib-collapse="advanced" class="ml-5 mb-5">
+      <hr>
+
+      <div class="alert alert-warning" role="alert">
+        Proceed with caution. I hope you know what you are doing.
+      </div>
+
+      <!-- tablet mode -->
+      <div class="form-group pb-1">
+        <label>Tablet Mode (Persistence)</label>
+
+        <div>
+          <label class="switch">
+            <input type="checkbox" ng-model="sc.formModel.persistence" ng-value="sc.formModel.persistence">
+            <span class="slider"></span>
+          </label>
+          <small>{{sc.formModel.persistence ? 'Enabled' : 'Disabled'}}</small><br><br>
+          <small>Enables persistant login on device. This will only allow read only access</small>
+        </div>
+      </div>
+
+      <!-- experimental features mode -->
+      <div class="form-group pb-1">
+        <label>Experimental Features</label>
+
+        <div>
+          <label class="switch">
+            <input type="checkbox" ng-model="sc.formModel.experimental" ng-value="sc.formModel.experimental">
+            <span class="slider"></span>
+          </label>
+          <small>{{sc.formModel.experimental ? 'Enabled' : 'Disabled'}}</small><br><br>
+          <small>Enables experimental features in Mapper. These are under heavy development and should be used with caution</small>
+        </div>
+      </div>
+
+      <!-- no auth mode -->
+      <div class="form-group pb-1">
+        <label>No Authentication</label>
+
+        <div>
+          <label class="switch">
+            <input type="checkbox" ng-model="sc.formModel.noauth" ng-value="sc.formModel.noauth">
+            <span class="slider"></span>
+          </label>
+          <small>{{sc.formModel.noauth ? 'Enabled' : 'Disabled'}}</small><br><br>
+          <small>If the server is configured for no login this should be enabled.</small>
+        </div>
+      </div>
+
+      <!-- factory reset  -->
+      <div class="form-group">
+        <label>Factory Reset</label>
+        <div>
+          <button type="button" class="btn btn-small btn-danger" ng-click="sc.reset()">Reset My Settings</button>
+        </div>
+        <small>Clear all stored settings, keys, sessions etc.</small>
+      </div>
+
+      <!-- token delete  -->
+      <div class="form-group">
+        <label>Delete access token</label>
+        <div>
+          <button type="button" class="btn btn-small btn-danger" ng-click="sc.token()">Delete Access Token</button>
+        </div>
+        <small>Delete the access token for this device</small>
+      </div>
+
+      <!-- session / token check  -->
+      <div class="form-group">
+        <label>Test My Login</label>
+        <div>
+          <button type="button" class="btn btn-small btn-dark" ng-click="sc.session()">Verify My Credentials</button>
+        </div>
+        <small>Check login credentials for permission level and account data</small>
+      </div>
+
+      <!-- logout  -->
+      <div class="form-group">
+        <label>Logout Session</label>
+        <div>
+          <button type="button" class="btn btn-small btn-dark" ng-click="sc.logout()">Logout</button>
+        </div>
+        <small>Close the session</small>
+      </div>
+
+
+    </div>
+
+    <hr>
+
+
+    <button type="submit" class="btn btn-primary" ng-click="sc.go(sc.formModel)">Save</button>
+
   </form>
+
 </div>
 
 <br><br><br>

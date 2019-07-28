@@ -192,7 +192,7 @@ app.service('configService', ['localStorageService', '$http', '$rootScope', func
             }
 
 
-            let confirm = that.init();
+            let confirm = that.init(); // check the server works
             confirm.then(function()
             {
                 // set config obj
@@ -242,6 +242,18 @@ app.service('configService', ['localStorageService', '$http', '$rootScope', func
     {
         return JSON.parse(localStorageService.get("config"));
     };
+
+    this.reset = function()
+    {
+        localStorageService.clearAll();
+    }
+
+    this.setupToken = function(token)
+    {
+        localStorageService.set("tabletToken", JSON.stringify(token));
+        localStorageService.set("tokenConfigured", true);
+        console.log('Token setup complete');
+    }
 }]);
 
 app.service('anchorSmoothScroll', function(){
@@ -307,7 +319,115 @@ app.service('boilerService', ['$http', '$rootScope', function($http, $rootScope)
 }]);
 
 // authService
-app.service('authService', ['$http', function($http)
+app.service('authService', ['localStorageService', function(localStorageService)
 {
+    this.getToken = function()
+    {
+        let configured = localStorageService.get("tokenConfigured");
+        if(configured === true)
+        {
+            let token = JSON.parse(localStorageService.get("tabletToken"));
+            return token;
+        }
+        else
+        {
+            return null;
+        }
+    }
+}]);
+
+app.service('loginService', ['localStorageService', '$http', '$rootScope', '$q', function(localStorageService, $http, $rootScope, $q)
+{
+    this.login = function(data)
+    {
+        return $q(function(resolve, reject) {
+            $http.post($rootScope.config.apiUrl + "api/users/login", data).then(function(output)
+            {
+                // 200
+
+                // generate token for tablet
+                if($rootScope.config.persistence == true)
+                {
+                    // create a token for tablet
+                    $http.get($rootScope.config.apiUrl + "api/token/").then(function(data)
+                    {
+                        // got the token -- store it
+                        localStorageService.set("tabletToken", JSON.stringify(data.data));
+                        localStorageService.set("tokenConfigured", true);
+                        console.log('Token setup complete');
+                        resolve(output);
+                    },
+                    function()
+                    {
+                        console.log("Token error");
+                        reject("token");
+                    });
+                }
+                else
+                {
+                    resolve(output);
+                }
+
+            }, function()
+            {
+                // 500, 403, 401
+                console.log('Error logging in');
+                reject("login");
+            });
+        });
+    }
+
+    this.session = function()
+    {
+        return new Promise(function(resolve, reject) {
+            $http.get($rootScope.config.apiUrl + "api/users/session").then(function(data)
+            {
+                if(data.data.message == "Valid")
+                {
+                    // user has a valid cookie
+                    resolve(data.data);
+                }
+                else
+                {
+                    // user has not got a valid cookie
+                    resolve(true, {});
+                }
+            }, function(data)
+            {
+                reject(true, data);
+            });
+        });
+    }
+
+    this.tryToken = function()
+    {
+        return $http.get($rootScope.config.apiUrl + "api/token");
+    }
+
+    this.verifyToken = function()
+    {
+        return $http.get($rootScope.config.apiUrl + "api/token/verify");
+    };
+
+    this.removeToken = function(password)
+    {
+        // deletes existing access token
+        return $http.post($rootScope.config.apiUrl + "api/token/remove", password);
+    }
+
+    this.removeLocalToken = function()
+    {
+        localStorageService.set("tokenConfigured", false);
+    }
+
+    this.affirmLocalToken = function()
+    {
+        localStorageService.set("tokenConfigured", true);
+    }
+
+    this.logout = function()
+    {
+        return $http.get($rootScope.config.apiUrl + "api/users/logout");
+    }
 
 }]);

@@ -6,10 +6,11 @@ var app = angular.module('Mapper', [
     'ngWebSocket',
     'angularUtils.directives.dirPagination',
     'ng-showdown',
-    'rzSlider'
+    'rzSlider',
+    'ngToast'
 ]);
 
-app.run(function(localStorageService, $state, $timeout, $rootScope, configService, mapService)
+app.run(function(localStorageService, $state, $timeout, $rootScope, $http, configService, mapService, loginService, authService)
 {
     $rootScope.errorLoading = false;
     $rootScope.checkedServer = false;
@@ -28,7 +29,12 @@ app.run(function(localStorageService, $state, $timeout, $rootScope, configServic
             },20)
 
             $rootScope.config = {
-                apiUrl: "test url"
+                protocol: "http://",
+                domain: "a domain",
+                port: 8090,
+                persistence: true,
+                experimental: false,
+                noauth: false
             }
         }
         else if(item === true)
@@ -40,6 +46,58 @@ app.run(function(localStorageService, $state, $timeout, $rootScope, configServic
             {
                 $rootScope.errorLoading = false;
                 $rootScope.checkedServer = true;
+
+                // no auth
+                if($rootScope.config.noauth !== true)
+                {
+                    // if persistence is set check the token
+                    if($rootScope.config.persistence == true)
+                    {
+                        // get the token
+
+                        $http.get(config.apiUrl + "api/token/verify").then(function successCallback(data)
+                        {
+                            if(data.data.message !== "Valid")
+                            {
+                                $state.go('login');
+                            }
+                            // else
+                            // {
+                            //     $state.go('mapFinder');
+                            // }
+                        }, function()
+                        {
+                            // error
+                            $state.go('login');
+                        });
+                    }
+                    else
+                    {
+                        loginService.session().then(function(data)
+                        {
+                            $rootScope.user = data;
+                        }, function(err, data)
+                        {
+                            $timeout(function()
+                            {
+                                $state.go('login');
+                            },20)
+                        });
+                    }
+                }
+                else
+                {
+                    $rootScope.permissionLevel = 3;
+                }
+
+                if($rootScope.config.experimental == true)
+                {
+                    $rootScope.experimental = true;
+                }
+                else
+                {
+                    $rootScope.experimental = false;
+                }
             }, function errorCallback()
             {
                 // bad connection send to setup to check
@@ -67,12 +125,10 @@ app.run(function(localStorageService, $state, $timeout, $rootScope, configServic
         {
             let favouriteList = mapService.getFavourites();
             $rootScope.favourites = favouriteList;
-            console.log($rootScope.favourites);
         }
         else
         {
             $rootScope.favourites = [];
-            console.log($rootScope.favourites);
         }
 
     }

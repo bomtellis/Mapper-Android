@@ -1,7 +1,20 @@
-app.controller('MapperController', ['$rootScope', function($rootScope) {
+app.controller('MapperController', ['$rootScope', '$scope', function($rootScope, $scope) {
     var that = this;
     that.error = $rootScope.errorLoading;
     that.loading = $rootScope.checkedServer;
+    that.permissionLevel = $rootScope.permissionLevel;
+    that.experimental = $rootScope.config.experimental;
+
+    $rootScope.$watch('permissionLevel', function(value)
+    {
+        that.permissionLevel = value;
+
+    });
+
+    $rootScope.$watch('experimental', function(value)
+    {
+        that.experimental = value;
+    });
 }]);
 
 app.controller('mapFinderController', ['mapService', '$state', function(mapService, $state)
@@ -10,6 +23,9 @@ app.controller('mapFinderController', ['mapService', '$state', function(mapServi
     mapService.getVisibleMaps().then(function successCallback(data)
     {
         that.mapData = data.data;
+    }, function()
+    {
+        $state.go('login');
     });
 
     this.selectTypeAhead = function(input)
@@ -185,7 +201,8 @@ app.controller('addMapController', ['$http', '$state', '$rootScope', '$websocket
 }]);
 
 // handles setup functions
-app.controller('setupController', ['configService', '$rootScope', '$state', '$timeout', function(configService, $rootScope, $state, $timeout)
+app.controller('setupController', ['configService', '$rootScope', '$state', '$timeout', 'loginService', '$uibModal', 'ngToast', 'authService',
+function(configService, $rootScope, $state, $timeout, loginService, $uibModal, ngToast, authService)
 {
     var that = this;
     that.loading = false;
@@ -196,8 +213,8 @@ app.controller('setupController', ['configService', '$rootScope', '$state', '$ti
     }
 
     // get existing config if possible
-    var status = configService.status();
-    if(status === true)
+    that.status = configService.status();
+    if(that.status === true)
     {
         that.config = configService.getConfig();
         that.formModel = this.config;
@@ -220,15 +237,122 @@ app.controller('setupController', ['configService', '$rootScope', '$state', '$ti
             protocol: formModel.protocol,
             domain: formModel.domain,
             port: formModel.port,
-            apiUrl: apiUrl
+            apiUrl: apiUrl,
+            persistence: formModel.persistence,
+            experimental: formModel.experimental,
+            noauth: formModel.noauth
         };
+
+        // if no auth is set disable persistence
+        $rootScope.config.noauth == true ? $rootScope.config.persistence = false : $rootScope.config.persistence;
 
         configService.setup($rootScope.config).then(function()
         {
             // resolve
-            that.loading = false;
             $rootScope.checkedServer = true;
-            $state.go('mapFinder');
+
+            // if config already exists
+            if(that.status == true)
+            {
+                // config exists and persistence is now false
+                if($rootScope.config.persistence == false)
+                {
+                    // remove old token
+                    loginService.removeLocalToken();
+                }
+                else
+                {
+                    loginService.affirmLocalToken();
+                }
+
+                if($rootScope.config.noauth == true)
+                {
+                    // remove old token
+                    loginService.removeLocalToken();
+                }
+                else
+                {
+                    loginService.affirmLocalToken();
+                }
+            }
+
+
+            if($rootScope.config.noauth == true)
+            {
+                // if no auth is true
+                // permissions to max
+                that.loading = false;
+                $rootScope.permissionLevel = 3;
+                $state.go('mapFinder');
+            }
+            else
+            {
+                if($rootScope.config.persistence == true)
+                {
+                    if(typeof authService.getToken() == null)
+                    {
+                        //try to get token
+                        loginService.tryToken().then(function(data)
+                        {
+                            console.log('got a token');
+                            configService.setupToken(data.data);
+                            $state.go('mapFinder');
+                        }, function()
+                        {
+                            console.log('291');
+                            $state.go('login');
+                        })
+                    }
+                    else
+                    {
+                        // check the token
+                        loginService.verifyToken().then(function()
+                        {
+                            that.loading = false;
+                            $state.go('mapFinder');
+                        },
+                        function()
+                        {
+                            loginService.session().then(function()
+                            {
+                                that.loading = false;
+                                // get new token
+                                loginService.tryToken().then(function(data)
+                                {
+                                    console.log('got a token 311');
+                                    configService.setupToken(data.data);
+                                    $state.go('mapFinder');
+                                }, function()
+                                {
+                                    console.log('316');
+                                    $state.go('login');
+                                })
+                            }, function()
+                            {
+                                that.loading = false;
+                                console.log('312');
+                                $state.go('login');
+                            });
+                        });
+                    }
+                }
+                else
+                {
+
+                    loginService.session().then(function()
+                    {
+                        that.loading = false;
+                        $state.go('mapFinder');
+                    }, function()
+                    {
+                        that.loading = false;
+                        console.log('320');
+                        $state.go('login');
+                    });
+                }
+            }
+
+            $rootScope.experimental = $rootScope.config.experimental;
         },
 
         function()
@@ -241,6 +365,177 @@ app.controller('setupController', ['configService', '$rootScope', '$state', '$ti
             }, 800);
         });
     }
+
+    this.reset = function()
+    {
+        var modalInstance = $uibModal.open({
+          animation: true,
+          templateUrl: "./views/modals/reset.tpl.html",
+          controller: "resetModalController",
+          controllerAs: 'rmc',
+          size: "md"
+        });
+
+        modalInstance.result.then(function (decision) {
+            if(decision === true)
+            {
+                ngToast.create({
+                    className: "info",
+                    timeout: 5000,
+                    content: "Reset all settings to default",
+                    dismissButton: true
+                })
+                // logout session
+                loginService.logout();
+                // remove token
+                loginService.removeToken();
+                // flatten settings
+                configService.reset();
+                that.loading = true;
+                $state.reload();
+            }
+        }, function () {
+            console.log('no reset');
+        });
+    };
+
+    this.logout = function()
+    {
+        loginService.logout().then(function(data)
+        {
+            ngToast.create({
+                className: "info",
+                timeout: 5000,
+                content: data.data.message,
+                dismissButton: true
+            })
+        }, function(data)
+        {
+            ngToast.create({
+                className: "info",
+                timeout: 5000,
+                content: "Unable to log you out",
+                dismissButton: true
+            })
+        });
+
+    }
+
+    this.token = function()
+    {
+        var modalInstance = $uibModal.open({
+          animation: true,
+          templateUrl: "./views/modals/token.tpl.html",
+          controller: "tokenModalController",
+          controllerAs: 'tmc',
+          size: "md"
+        });
+
+        modalInstance.result.then(function (decision) {
+            if(decision === true)
+            {
+                // token has been removed
+                that.loading = true;
+                ngToast.create({
+                    className: "info",
+                    timeout: 5000,
+                    content: "Token deleted successfully",
+                    dismissButton: true
+                })
+                $state.reload();
+            }
+        }, function () {
+            console.log('no reset');
+        });
+    }
+
+    this.session = function()
+    {
+        loginService.session().then(function(data)
+        {
+
+            var modalInstance = $uibModal.open({
+              animation: true,
+              templateUrl: "./views/modals/session.tpl.html",
+              controller: "sessionModalController",
+              controllerAs: 'rmc',
+              size: "md",
+              resolve: {
+                  data: function() {return data;},
+                  status: function() { return true; }
+              }
+            });
+
+            modalInstance.result.then(function (decision) {
+            }, function () {
+            });
+        }, function()
+        {
+            let error = {
+                message: "User is not logged in",
+                status: "Invalid"
+            }
+            var modalInstance = $uibModal.open({
+              animation: true,
+              templateUrl: "./views/modals/session.tpl.html",
+              controller: "sessionModalController",
+              controllerAs: 'rmc',
+              size: "md",
+              resolve: {
+                  data: function() {return error;},
+                  status: function() { return false; }
+              }
+            });
+
+            modalInstance.result.then(function (decision) {
+            }, function () {
+            });
+        });
+    }
+}]);
+
+app.controller('loginController', ['loginService', '$timeout', '$state', '$rootScope', function(loginService, $timeout, $state, $rootScope)
+{
+    var that = this;
+    that.loginError = false;
+    that.tokenError = false;
+    that.loading = false;
+
+    that.go = function(data)
+    {
+        that.loading = true;
+        loginService.login(data).then(function successCallback(output)
+        {
+            $rootScope.permissionLevel = output.data.permissionLevel;
+            $timeout(function()
+            {
+                that.loading = false;
+                $state.go('mapFinder');
+            }, 500);
+
+        }, function errorCallback(err)
+        {
+            if(err == "token")
+            {
+                that.loading = false;
+                that.tokenError = true;
+                $timeout(function()
+                {
+                    that.tokenError = false;
+                }, 5000);
+            }
+
+            if(err == "login")
+            {
+                that.loading = false;
+                that.loginError = true;
+                $timeout(function()
+                {
+                    that.loginError = false;
+                }, 5000);
+            }
+        });
+    };
 }]);
 
 app.controller('preferencesController', ['$uibModal', 'mapService', '$state', function($uibModal, mapService, $state)
@@ -320,6 +615,9 @@ app.controller('manageController', ['mapService', '$state', '$uibModal', '$state
     {
         that.loading = false;
         that.items = data.data;
+    }, function()
+    {
+        $state.go('login');
     });
 
     this.pageUpdate = function()
@@ -533,5 +831,79 @@ app.controller('renameModalController', ['$uibModalInstance', 'map', function($u
     this.cancel = function()
     {
         $uibModalInstance.dismiss({status: false});
+    }
+}]);
+
+app.controller('resetModalController', ['$uibModalInstance', function($uibModalInstance)
+{
+    var that = this;
+
+    this.ok = function()
+    {
+        $uibModalInstance.close(true);
+    }
+
+    this.cancel = function()
+    {
+        $uibModalInstance.dismiss(false);
+    }
+}]);
+
+app.controller('sessionModalController', ['$uibModalInstance', 'localStorageService', 'data', 'status', function($uibModalInstance, localStorageService, data, status)
+{
+    var that = this;
+
+    that.status = status;
+    that.data = data;
+
+    that.token = localStorageService.get('tabletToken');
+
+    this.ok = function()
+    {
+        $uibModalInstance.close();
+    }
+
+    this.cancel = function()
+    {
+        $uibModalInstance.dismiss();
+    }
+}]);
+
+app.controller('tokenModalController', ['$uibModalInstance', 'loginService', '$timeout', 'localStorageService', function($uibModalInstance, loginService, $timeout, localStorageService)
+{
+    var that = this;
+
+    that.disabled = false;
+    that.valid = true;
+    that.success = false;
+
+    this.ok = function(password)
+    {
+        that.disabled = true;
+        loginService.removeToken({password: password}).then(function()
+        {
+            // valid password
+            console.log('this happened 858');
+            that.valid = true;
+            that.success = true;
+            localStorageService.remove('tabletToken');
+
+            $timeout(function(){
+                $uibModalInstance.close(true);
+            }, 1000);
+        },
+        function()
+        {
+            // invalid password
+            console.log('this happened 865');
+            that.valid = false;
+            that.disabled = false;
+        })
+
+    }
+
+    this.cancel = function()
+    {
+        $uibModalInstance.dismiss(false);
     }
 }]);
