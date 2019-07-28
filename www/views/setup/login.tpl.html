@@ -1,0 +1,23 @@
+<div class="splash" ng-if="lC.loading">
+    <div class="spinner"></div>
+</div>
+
+<div class="text-center">
+  <div class="alert alert-warning" role="alert" ng-if="lC.loginError">
+    Are you sure this is the correct username and password?
+  </div>
+  <div class="alert alert-danger" role="alert" ng-if="lC.tokenError">
+    Unable to generate tablet token. Please wait 5 minutes for cooldown
+  </div>
+
+  <form class="form-signin" name="loginForm" ng-submit="lC.go(formData)">
+    <h1 class="h3 mb-3 font-weight-normal">Please sign in</h1>
+    <label for="inputEmail" class="sr-only">Email address</label>
+    <input type="text" id="inputEmail" class="form-control" placeholder="Email address" required autofocus ng-model="formData.username">
+    <label for="inputPassword" class="sr-only">Password</label>
+    <input type="password" id="inputPassword" class="form-control" placeholder="Password" required ng-model="formData.password">
+    <br>
+    <button class="btn btn-lg btn-primary btn-block" type="submit">Sign in</button>
+  </form>
+
+</div>
