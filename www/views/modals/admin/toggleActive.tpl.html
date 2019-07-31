@@ -1,0 +1,18 @@
+<div class="modal-content">
+  <div class="modal-header">
+    <h3 class="modal-title" id="modal-title">{{modal.user.active ? 'Deactivate' : 'Activate'}} this user?</h3>
+  </div>
+  <div class="modal-body" id="modal-body">
+    <p>You are about to {{modal.user.active ? 'Deactivate' : 'Activate'}} this account
+      <pre>
+          Username: {{modal.user.username}}
+          Name: {{modal.user.firstName + ' ' + modal.user.lastName}}
+      </pre>
+      Are you sure?
+    </p>
+  </div>
+  <div class="modal-footer">
+    <button class="btn btn-warning" type="button" ng-click="modal.ok()">{{modal.user.active ? 'Deactivate' : 'Activate'}}</button>
+    <button class="btn btn-light" type="button" ng-click="modal.cancel()">Cancel</button>
+  </div>
+</div>

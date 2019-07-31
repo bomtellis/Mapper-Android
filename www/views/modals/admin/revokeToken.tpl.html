@@ -1,0 +1,18 @@
+<div class="modal-content">
+  <div class="modal-header">
+    <h3 class="modal-title" id="modal-title">Revoke this access token?</h3>
+  </div>
+  <div class="modal-body" id="modal-body">
+    <p>You are about to revoke this token from {{modal.user.username}}
+      <pre>
+          API Key ending in {{modal.user.tokenId.token}}
+      </pre>
+      <u>Are you sure? There is no going back!</u>
+    </p>
+
+  </div>
+  <div class="modal-footer">
+    <button class="btn btn-danger" type="button" ng-click="modal.ok()">Revoke Access</button>
+    <button class="btn btn-light" type="button" ng-click="modal.cancel()">Cancel</button>
+  </div>
+</div>

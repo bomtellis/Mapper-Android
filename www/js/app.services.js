@@ -336,7 +336,7 @@ app.service('authService', ['localStorageService', function(localStorageService)
     }
 }]);
 
-app.service('loginService', ['localStorageService', '$http', '$rootScope', '$q', function(localStorageService, $http, $rootScope, $q)
+app.service('loginService', ['localStorageService', '$http', '$rootScope', '$q', '$window', function(localStorageService, $http, $rootScope, $q, $window)
 {
     this.login = function(data)
     {
@@ -417,16 +417,19 @@ app.service('loginService', ['localStorageService', '$http', '$rootScope', '$q',
 
     this.removeLocalToken = function()
     {
+        $rootScope.permissionLevel = JSON.parse($window.sessionStorage.getItem("permissionLevel"));
         localStorageService.set("tokenConfigured", false);
     }
 
     this.affirmLocalToken = function()
     {
+        $rootScope.permissionLevel = 1;
         localStorageService.set("tokenConfigured", true);
     }
 
     this.logout = function()
     {
+        $window.sessionStorage.removeItem("permissionLevel");
         return $http.get($rootScope.config.apiUrl + "api/users/logout");
     }
 

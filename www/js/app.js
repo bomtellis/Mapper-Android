@@ -10,7 +10,7 @@ var app = angular.module('Mapper', [
     'ngToast'
 ]);
 
-app.run(function(localStorageService, $state, $timeout, $rootScope, $http, configService, mapService, loginService, authService)
+app.run(function(localStorageService, $state, $timeout, $rootScope, $http, configService, mapService, loginService, authService, $window)
 {
     $rootScope.errorLoading = false;
     $rootScope.checkedServer = false;
@@ -75,9 +75,10 @@ app.run(function(localStorageService, $state, $timeout, $rootScope, $http, confi
                     {
                         loginService.session().then(function(data)
                         {
-                            $rootScope.user = data;
+                            $rootScope.permissionLevel = JSON.parse($window.sessionStorage.getItem("permissionLevel"));
                         }, function(err, data)
                         {
+                            $rootScope.permissionLevel = 1;
                             $timeout(function()
                             {
                                 $state.go('login');

@@ -1,0 +1,26 @@
+<div class="modal-content">
+  <div class="modal-header">
+    <h3 class="modal-title" id="modal-title">Delete this user?</h3>
+  </div>
+  <div class="modal-body" id="modal-body">
+    <p>You are about to delete this account
+      <pre>
+          Username: {{modal.user.username}}
+          Name: {{modal.user.firstName + ' ' + modal.user.lastName}}
+      </pre>
+      <u>Are you sure? There is no going back!</u>
+    </p>
+
+    <span>Please type the username to confirm your choice</span>
+    <form>
+      <div class="form-group">
+        <input type="text" class="form-control" ng-model="username" required />
+      </div>
+    </form>
+
+  </div>
+  <div class="modal-footer">
+    <button class="btn btn-danger" type="button" ng-click="modal.ok()" ng-disabled="!(modal.user.username == username)">Delete</button>
+    <button class="btn btn-light" type="button" ng-click="modal.cancel()">Cancel</button>
+  </div>
+</div>
