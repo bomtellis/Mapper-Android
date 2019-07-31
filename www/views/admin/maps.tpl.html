@@ -1,0 +1,37 @@
+<div class="d-flex justify-content-between flex-wrap flex-md-nowrap align-items-center pb-2 mb-3 border-bottom">
+  <h1 class="h2">Maps</h1>
+</div>
+
+<div class="form-group">
+  <input
+    class="form-control form-control-borderless"
+    type="search"
+    placeholder="Search for a map"
+    name="mapName"
+    ng-model="findMap"
+    typeahead-on-select="mfc.selectTypeAhead($item)"
+    uib-typeahead="map.mapName for map in AM.maps | filter: {mapName: $viewValue} | limitTo: 10"
+    autocomplete="off">
+</div>
+
+<table class="table table-hover">
+  <thead>
+    <tr>
+      <th scope="col">#</th>
+      <th scope="col">Map Name</th>
+      <th scope="col">Description</th>
+      <th scope="col">Hidden</th>
+      <th scope="col">Audit</th>
+      <th scope="col">Actions</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr ng-repeat="map in AM.maps | filter: findMap | limitTo: 10">
+      <th scope="row">{{$index+1}}</th>
+      <td>{{map.mapName}}</td>
+      <td>{{map.description}}</td>
+      <td>{{map.hidden ? 'Yes': 'No'}}</td>
+      <td>{{map.active ? 'Yes': 'No'}}</td>
+    </tr>
+  </tbody>
+</table>

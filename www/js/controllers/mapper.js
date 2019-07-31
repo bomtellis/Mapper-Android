@@ -7,6 +7,7 @@ app.controller('MapperController', ['$rootScope', '$scope', function($rootScope,
 
     $rootScope.$watch('permissionLevel', function(value)
     {
+        console.log('Changed to: ' + value);
         that.permissionLevel = value;
 
     });
@@ -201,8 +202,8 @@ app.controller('addMapController', ['$http', '$state', '$rootScope', '$websocket
 }]);
 
 // handles setup functions
-app.controller('setupController', ['configService', '$rootScope', '$state', '$timeout', 'loginService', '$uibModal', 'ngToast', 'authService',
-function(configService, $rootScope, $state, $timeout, loginService, $uibModal, ngToast, authService)
+app.controller('setupController', ['configService', '$rootScope', '$state', '$timeout', 'loginService', '$uibModal', 'ngToast', 'authService', '$window',
+function(configService, $rootScope, $state, $timeout, loginService, $uibModal, ngToast, authService, $window)
 {
     var that = this;
     that.loading = false;
@@ -341,10 +342,12 @@ function(configService, $rootScope, $state, $timeout, loginService, $uibModal, n
 
                     loginService.session().then(function()
                     {
+                        $rootScope.permissionLevel = JSON.parse($window.sessionStorage.getItem("permissionLevel"));
                         that.loading = false;
                         $state.go('mapFinder');
                     }, function()
                     {
+                        $rootScope.permissionLevel = 1;
                         that.loading = false;
                         console.log('320');
                         $state.go('login');
@@ -494,7 +497,7 @@ function(configService, $rootScope, $state, $timeout, loginService, $uibModal, n
     }
 }]);
 
-app.controller('loginController', ['loginService', '$timeout', '$state', '$rootScope', function(loginService, $timeout, $state, $rootScope)
+app.controller('loginController', ['loginService', '$timeout', '$state', '$rootScope', '$window', function(loginService, $timeout, $state, $rootScope, $window)
 {
     var that = this;
     that.loginError = false;
@@ -507,6 +510,7 @@ app.controller('loginController', ['loginService', '$timeout', '$state', '$rootS
         loginService.login(data).then(function successCallback(output)
         {
             $rootScope.permissionLevel = output.data.permissionLevel;
+            $window.sessionStorage.setItem("permissionLevel", $rootScope.permissionLevel);
             $timeout(function()
             {
                 that.loading = false;

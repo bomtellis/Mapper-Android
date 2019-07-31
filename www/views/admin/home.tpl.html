@@ -1,0 +1,54 @@
+<div class="d-flex justify-content-between flex-wrap flex-md-nowrap align-items-center pb-2 mb-3 border-bottom">
+  <h1 class="h2">Overview</h1>
+</div>
+
+<div class="row">
+  <div class="col-sm-4">
+
+    <div class="card">
+      <div class="card-top">
+        <i class="fas fa-users fa-8x"></i>
+      </div>
+      <div class="card-body">
+        <h5 class="card-title">Users</h5>
+        <p class="card-text">There
+          <ng-pluralize count="AH.stats.users" when="{'0': 'are no users', 'one': '1 user', 'other': 'are {} users'}"></ng-pluralize>
+          registered</p>
+        <a ui-sref="admin.users" class="btn btn-primary">View Users</a>
+      </div>
+    </div>
+
+  </div>
+  <div class="col-sm-4">
+
+    <div class="card">
+      <div class="card-top">
+        <i class="fas fa-map fa-8x"></i>
+      </div>
+      <div class="card-body">
+        <h5 class="card-title">Maps</h5>
+        <p class="card-text">There
+          <ng-pluralize count="AH.stats.maps" when="{'0': 'are no maps', 'one': 'is 1 map', 'other': 'are {} maps'}"></ng-pluralize>
+          available</p>
+        <a ui-sref="manage" class="btn btn-primary">View Maps</a>
+      </div>
+    </div>
+
+  </div>
+
+  <div class="col-sm-4">
+    <div class="card">
+      <div class="card-top">
+        <i class="fas fa-key fa-8x"></i>
+      </div>
+      <div class="card-body">
+        <h5 class="card-title">Tokens</h5>
+        <p class="card-text">There
+          <ng-pluralize count="AH.stats.tokens" when="{'0': 'are no tablets', 'one': 'is 1 tablet', 'other': 'are {} tablets'}"></ng-pluralize>
+          registered</p>
+        <a ui-sref="admin.keys" class="btn btn-primary">View Keys</a>
+      </div>
+    </div>
+
+  </div>
+</div>

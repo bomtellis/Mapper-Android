@@ -1,0 +1,27 @@
+<div class="d-flex justify-content-between flex-wrap flex-md-nowrap align-items-center pb-2 mb-3 border-bottom">
+  <h1 class="h2">Access Tokens / API Keys</h1>
+</div>
+
+<div class="form-group">
+  <input class="form-control form-control-borderless" type="search" placeholder="Search by username" name="mapName" ng-model="findUser" typeahead-on-select="mfc.selectTypeAhead($item)" uib-typeahead="key.username for key in AK.keys | filter: {username: $viewValue}"
+      autocomplete="off">
+</div>
+
+<table class="table table-hover">
+  <thead>
+    <tr>
+      <th scope="col">Username</th>
+      <th scope="col">API Key</th>
+      <th scope="col">Actions</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr ng-repeat="key in AK.keys | filter: findUser | limitTo: 10">
+      <td>{{key.username}}</td>
+      <td>{{key.tokenId.token ? key.tokenId.token : 'None' }}</td>
+      <td>
+        <button type="button" class="btn btn-danger" ng-show="!!(key.tokenId.token)" ng-click="AK.revoke(key)">Revoke</button>
+      </td>
+    </tr>
+  </tbody>
+</table>

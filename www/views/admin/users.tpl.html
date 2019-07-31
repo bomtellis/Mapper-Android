@@ -1,0 +1,51 @@
+<div class="d-flex justify-content-between flex-wrap flex-md-nowrap align-items-center pb-2 mb-3 border-bottom">
+  <h1 class="h2">User Accounts</h1>
+</div>
+
+<div class="form-group">
+  <div class="row">
+    <div class="col-sm-9">
+      <input class="form-control form-control-borderless" type="search" placeholder="Search for a user" name="mapName" ng-model="findUser" typeahead-on-select="AU.selectTypeAhead($item)" uib-typeahead="user.username for user in AU.users | filter: {username: $viewValue}"
+          autocomplete="off">
+    </div>
+    <div class="col-sm-3 px-3">
+      <button type="button" class="btn btn-success" ui-sref="admin.create">Create New User</button>
+    </div>
+  </div>
+
+</div>
+
+<table class="table table-hover">
+  <thead>
+    <tr>
+      <th scope="col">#</th>
+      <th scope="col">Username</th>
+      <th scope="col">Role</th>
+      <th scope="col">Active</th>
+      <th scope="col">Actions</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr ng-repeat="user in AU.users | filter: findUser">
+      <th scope="row">{{$index + 1}}</th>
+      <td>{{user.username}}</td>
+      <td>
+        <ng-pluralize count="user.role" when="{'1': 'Viewer', '2': 'Editor', '3': 'Admin'}"></ng-pluralize>
+      </td>
+      <td>{{user.active ? 'Yes' : 'No'}}</td>
+      <td>
+        <div class="dropdown">
+          <button class="btn btn-secondary dropdown-toggle" type="button" id="dropdownMenuButton" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+            Edit
+          </button>
+          <div class="dropdown-menu" aria-labelledby="dropdownMenuButton">
+            <a class="dropdown-item" ui-sref="admin.changePassword({id: user._id, userData: user})">Change Password</a>
+            <a class="dropdown-item" ui-sref="admin.changeRole({id: user._id, userData: user})">Change Role</a>
+            <a class="dropdown-item" ng-click="AU.toggleActive(user)">{{user.active ? 'Deactivate': 'Activate'}}</a>
+            <a class="dropdown-item" ng-click="AU.deleteUser(user)">Delete</a>
+          </div>
+        </div>
+      </td>
+    </tr>
+  </tbody>
+</table>

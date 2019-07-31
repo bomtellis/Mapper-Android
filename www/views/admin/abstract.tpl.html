@@ -1,0 +1,44 @@
+<div id="inset">
+  <nav id="navbar" class="navbar navbar-dark sticky-top bg-dark flex-md-nowrap p-0">
+    <a id="navbar-brand" class="navbar-brand col-sm-3 col-md-2 mr-0" href="#">Mapper API Dashboard</a>
+    <ul class="navbar-nav px-3">
+      <li class="nav-item text-nowrap">
+        <a class="nav-link" href="#">Sign out</a>
+      </li>
+    </ul>
+  </nav>
+
+  <div class="container-fluid">
+    <div class="row">
+      <nav class="col-md-2 d-none d-md-block bg-light sidebar">
+        <div class="sidebar-sticky">
+          <ul class="nav flex-column">
+            <li class="nav-item">
+              <a class="nav-link" ui-sref="admin.home" ui-sref-active="active">
+                <i class="fas fa-home"></i>
+                Overview
+                <span class="sr-only">(current)</span>
+              </a>
+            </li>
+            <li class="nav-item">
+              <a class="nav-link" ui-sref="admin.users" ui-sref-active="active">
+                <i class="fas fa-users"></i>
+                User Accounts
+              </a>
+            </li>
+            <li class="nav-item">
+              <a class="nav-link" ui-sref="admin.keys" ui-sref-active="active">
+                <i class="fas fa-key"></i>
+                Access Tokens / API Keys
+              </a>
+            </li>
+          </ul>
+      </nav>
+
+      <main role="main" class="col-md-9 ml-sm-auto col-lg-10 pt-3 px-4">
+        <ui-view style="padding-bottom: 100px;"></ui-view>
+      </main>
+    </div>
+  </div>
+
+</div>
