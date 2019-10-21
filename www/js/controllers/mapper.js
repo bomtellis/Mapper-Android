@@ -18,7 +18,7 @@ app.controller('MapperController', ['$rootScope', '$scope', function($rootScope,
     });
 }]);
 
-app.controller('mapFinderController', ['mapService', '$state', function(mapService, $state)
+app.controller('mapFinderController', ['mapService', '$state', 'ngToast', function(mapService, $state, ngToast)
 {
     var that = this;
     mapService.getVisibleMaps().then(function successCallback(data)
@@ -26,6 +26,13 @@ app.controller('mapFinderController', ['mapService', '$state', function(mapServi
         that.mapData = data.data;
     }, function()
     {
+        ngToast.create({
+            className: "info",
+            timeout: 10000,
+            content: "Unable to fetch list of maps",
+            dismissButton: true
+        });
+
         $state.go('login');
     });
 
@@ -40,7 +47,7 @@ app.controller('mapFinderController', ['mapService', '$state', function(mapServi
 
 }]);
 
-app.controller('viewMapController', ['mapService', '$stateParams', 'leafletData', 'leafletBoundsHelpers', '$scope', '$timeout', '$rootScope', function(mapService, $stateParams, leafletData, leafletBoundsHelpers, $scope, $timeout, $rootScope)
+app.controller('viewMapController', ['mapService', '$stateParams', 'leafletData', 'leafletBoundsHelpers', '$scope', '$timeout', '$rootScope', 'ngToast', '$state', function(mapService, $stateParams, leafletData, leafletBoundsHelpers, $scope, $timeout, $rootScope, ngToast, $state)
 {
     var that = this;
     $scope.loading = true;
@@ -125,6 +132,17 @@ app.controller('viewMapController', ['mapService', '$stateParams', 'leafletData'
         {
             $scope.loading = false;
         }, 400);
+    }, function()
+    {
+        // error callback - unable to fetch map
+        ngToast.create({
+            className: "info",
+            timeout: 10000,
+            content: "Unable to fetch map",
+            dismissButton: true
+        });
+
+        $state.go('manage');
     });
 
     // toggle Favourite
@@ -147,7 +165,7 @@ app.controller('viewMapController', ['mapService', '$stateParams', 'leafletData'
 
 }]);
 
-app.controller('addMapController', ['$http', '$state', '$rootScope', '$websocket', '$timeout', function($http, $state, $rootScope, $websocket, $timeout)
+app.controller('addMapController', ['$http', '$state', '$rootScope', '$websocket', '$timeout', 'ngToast', function($http, $state, $rootScope, $websocket, $timeout, ngToast)
 {
     var that = this;
     this.loading = false;
@@ -167,37 +185,28 @@ app.controller('addMapController', ['$http', '$state', '$rootScope', '$websocket
             }
         }).then(function successCallback(data)
         {
-            var socket = $websocket($rootScope.config.wsProtocol + $rootScope.config.domain + ":" +$rootScope.config.port + "/api/maps/");
-
-            socket.send(JSON.stringify({
-                action: "add.refresh"
-            }));
-
-            socket.onMessage(function(message)
-            {
-                let msg = JSON.parse(message.data);
-                if(msg.action == "refresh")
-                {
-                    that.loading = false;
-                    socket.close();
-                    $state.go('manage');
-                }
-            });
-
             // Backup if websockets fail
             $timeout(function()
             {
                 // backup
                 if(that.loading === true)
                 {
-                    socket.close();
                     $state.go('manage');
                 }
-            }, 80000);
-        }, function errorCallback()
+            }, 20000);
+        }, function errorCallback(err)
         {
+            that.loading = false;
 
-        })
+            console.log(err);
+
+            ngToast.create({
+                className: "warning",
+                timeout: 5000,
+                content: "Unable to create map",
+                dismissButton: true
+            });
+        });
     };
 }]);
 
@@ -609,7 +618,7 @@ app.controller('favouritesController', ['$rootScope', 'mapService', '$uibModal',
 
 }]);
 
-app.controller('manageController', ['mapService', '$state', '$uibModal', '$stateParams', 'anchorSmoothScroll', '$location', function(mapService, $state, $uibModal, $stateParams, anchorSmoothScroll, $location)
+app.controller('manageController', ['mapService', '$state', '$uibModal', '$stateParams', 'anchorSmoothScroll', '$location', 'ngToast', function(mapService, $state, $uibModal, $stateParams, anchorSmoothScroll, $location, ngToast)
 {
     var that = this;
     that.loading = true;
@@ -621,7 +630,16 @@ app.controller('manageController', ['mapService', '$state', '$uibModal', '$state
         that.items = data.data;
     }, function()
     {
-        $state.go('login');
+        that.loading = false;
+
+        ngToast.create({
+            className: "warning",
+            timeout: 10000,
+            content: "Unable to fetch maps, please check connection",
+            dismissButton: true
+        });
+
+        $state.go('setup');
     });
 
     this.pageUpdate = function()
@@ -649,7 +667,39 @@ app.controller('manageController', ['mapService', '$state', '$uibModal', '$state
             if(decision === true)
             {
                 mapData.hidden = !mapData.hidden;
-                mapService.updateMap(mapData, null);
+                mapService.updateMap(mapData, null).then(function()
+                {
+                    // success callback
+
+                    var message;
+                    if(mapData.hidden !== true)
+                    {
+                        message = " is now visible";
+                    }
+                    else
+                    {
+                        message = " has been hidden";
+                    }
+
+                    ngToast.create({
+                        className: "info",
+                        timeout: 5000,
+                        content: map.mapName + message,
+                        dismissButton: true
+                    });
+                },
+                function()
+                {
+                    // error callback
+                    mapData.hidden = !mapData.hidden;
+
+                    ngToast.create({
+                        className: "warning",
+                        timeout: 8000,
+                        content: "Unable to " + (mapData.hidden ? 'show ' : 'hide ') + map.mapName,
+                        dismissButton: true
+                    });
+                });
             }
         }, function () {
             console.log('no delete');
@@ -679,7 +729,23 @@ app.controller('manageController', ['mapService', '$state', '$uibModal', '$state
                     mapService.getAllMaps().then(function(data)
                     {
                         that.items = data.data;
+                    }, function()
+                    {
+                        ngToast.create({
+                            className: "warning",
+                            timeout: 5000,
+                            content: "Unable to fetch maps",
+                            dismissButton: true
+                        });
                     })
+                }, function()
+                {
+                    ngToast.create({
+                        className: "warning",
+                        timeout: 5000,
+                        content: "Unable to delete " + map.mapName,
+                        dismissButton: true
+                    });
                 });
             }
         }, function () {
@@ -688,7 +754,7 @@ app.controller('manageController', ['mapService', '$state', '$uibModal', '$state
     }
 }]);
 
-app.controller('editMapController', ['mapService', '$stateParams', '$state', '$websocket', '$rootScope', '$timeout', function(mapService, $stateParams, $state, $websocket, $rootScope, $timeout)
+app.controller('editMapController', ['mapService', '$stateParams', '$state', '$websocket', '$rootScope', '$timeout', 'ngToast', function(mapService, $stateParams, $state, $websocket, $rootScope, $timeout, ngToast)
 {
     var that = this;
     that.id = $stateParams.id;
@@ -698,6 +764,15 @@ app.controller('editMapController', ['mapService', '$stateParams', '$state', '$w
     {
         that.loading = false;
         that.map = data.data;
+    }, function()
+    {
+        ngToast.create({
+            className: "warning",
+            timeout: 5000,
+            content: "Unable to fetch map",
+            dismissButton: true
+        });
+        $state.go('manage');
     });
 
     this.go = function(form, file)
@@ -752,6 +827,17 @@ app.controller('editMapController', ['mapService', '$stateParams', '$state', '$w
                     $state.go('manage');
                 }
             }, 25000);
+        }, function()
+        {
+            // error callback
+            that.loading = false;
+            ngToast.create({
+                className: "warning",
+                timeout: 8000,
+                content: "Unable to update map",
+                dismissButton: true
+            });
+            $state.reload();
         });
     }
 }]);
